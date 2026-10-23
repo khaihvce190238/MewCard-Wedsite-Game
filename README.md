@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # MewCard — Decision Card Game + Card Shop
 
 Website **rút bài để đưa ra gợi ý** (không phải game chiến đấu/gacha) kết hợp **cửa hàng bán bộ bài vật lý**, đăng ký thành viên có xét duyệt và trang quản trị Admin.
