@@ -1,0 +1,9 @@
+node_modules
+.env
+*.log
+dist
+.DS_Store
+# Ảnh Admin upload (giữ lại ảnh seed trong uploads/seed)
+backend/uploads/*
+!backend/uploads/seed/
+!backend/uploads/.gitkeep
