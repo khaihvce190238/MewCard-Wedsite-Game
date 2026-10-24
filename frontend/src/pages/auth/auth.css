@@ -1,0 +1,10 @@
+.auth-divider { display: flex; align-items: center; gap: .75rem; margin: .6rem 0; color: var(--text, #666); font-size: .85rem; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-top: 1px solid var(--border, #ddd); }
+.google-wrap { display: flex; justify-content: center; min-height: 44px; }
+.auth-note { font-size: .85rem; color: var(--text, #666); margin: .4rem 0; }
+.auth-note code { background: var(--surface-2, rgba(128, 128, 128, .15)); border-radius: 4px; padding: 0 .3rem; }
+.code-input { text-align: center; letter-spacing: .6em; font-size: 1.6rem; font-weight: 600; padding: .6rem .5rem .6rem 1.1rem; }
+.auth-actions { display: flex; justify-content: space-between; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.link-btn { background: none; border: 0; padding: 0; font: inherit; color: var(--primary, var(--accent, #7c3aed)); cursor: pointer; text-decoration: underline; }
+.link-btn:disabled { color: var(--text, #666); cursor: not-allowed; text-decoration: none; opacity: .7; }
+.verify-email { font-weight: 600; word-break: break-all; }

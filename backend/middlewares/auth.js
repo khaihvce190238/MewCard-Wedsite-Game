@@ -17,7 +17,9 @@ export const authenticate = asyncHandler(async (req, res, next) => {
   }
   const r = await exec(
     await getPool(),
-    'SELECT UserID, FullName, Email, Phone, Address, Role, Status, CreatedAt FROM dbo.Users WHERE UserID = @id',
+    `SELECT UserID, FullName, Email, Phone, Address, Role, Status, CreatedAt,
+            CAST(CASE WHEN PasswordHash IS NULL THEN 0 ELSE 1 END AS BIT) AS HasPassword
+     FROM dbo.Users WHERE UserID = @id`,
     { id: Number(payload.sub) },
   );
   const user = r.recordset[0];

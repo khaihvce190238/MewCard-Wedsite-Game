@@ -17,7 +17,8 @@ CREATE TABLE dbo.Users (
   UserID       INT IDENTITY(1,1) CONSTRAINT PK_Users PRIMARY KEY,
   FullName     NVARCHAR(100) NOT NULL,
   Email        NVARCHAR(255) NOT NULL,
-  PasswordHash NVARCHAR(255) NOT NULL,
+  PasswordHash NVARCHAR(255) NULL,           -- NULL = tài khoản chỉ đăng nhập bằng Google
+  GoogleId     NVARCHAR(64)  NULL,           -- 'sub' của tài khoản Google đã liên kết
   Phone        NVARCHAR(20)  NULL,           -- giả định: để điền sẵn khi checkout
   Address      NVARCHAR(300) NULL,           -- giả định: để điền sẵn khi checkout
   Role         NVARCHAR(10)  NOT NULL CONSTRAINT DF_Users_Role    DEFAULT N'User',
@@ -25,8 +26,10 @@ CREATE TABLE dbo.Users (
   CreatedAt    DATETIME2(0)  NOT NULL CONSTRAINT DF_Users_Created DEFAULT SYSUTCDATETIME(),
   CONSTRAINT UQ_Users_Email  UNIQUE (Email),
   CONSTRAINT CK_Users_Role   CHECK (Role   IN (N'User', N'Admin')),
-  CONSTRAINT CK_Users_Status CHECK (Status IN (N'Active', N'Locked'))
+  CONSTRAINT CK_Users_Status CHECK (Status IN (N'Active', N'Locked')),
+  CONSTRAINT CK_Users_LoginMethod CHECK (PasswordHash IS NOT NULL OR GoogleId IS NOT NULL)
 );
+CREATE UNIQUE INDEX UX_Users_GoogleId ON dbo.Users (GoogleId) WHERE GoogleId IS NOT NULL;
 
 /* ---------- 2. Topics ---------- */
 CREATE TABLE dbo.Topics (
@@ -207,4 +210,20 @@ CREATE TABLE dbo.PaymentTransactions (
 CREATE UNIQUE INDEX UX_PayTx_ProviderNo ON dbo.PaymentTransactions (Provider, ProviderTransactionNo)
   WHERE ProviderTransactionNo IS NOT NULL;
 CREATE INDEX IX_PayTx_Order ON dbo.PaymentTransactions (OrderID);
+
+/* ---------- 13. PendingRegistrations (đăng ký chờ xác nhận email — CHƯA phải tài khoản) ---------- */
+CREATE TABLE dbo.PendingRegistrations (
+  PendingID    INT IDENTITY(1,1) CONSTRAINT PK_PendingRegistrations PRIMARY KEY,
+  Email        NVARCHAR(255) NOT NULL,
+  FullName     NVARCHAR(100) NOT NULL,
+  PasswordHash NVARCHAR(255) NOT NULL,          -- đã hash bcrypt, không lưu mật khẩu rõ
+  CodeHash     NVARCHAR(128) NOT NULL,          -- HMAC-SHA256 của mã 6 số, không lưu mã rõ
+  ExpiresAt    DATETIME2(0) NOT NULL,           -- hạn của mã hiện tại
+  Attempts     INT NOT NULL CONSTRAINT DF_Pending_Attempts DEFAULT 0,   -- số lần nhập sai mã hiện tại
+  SendCount    INT NOT NULL CONSTRAINT DF_Pending_SendCount DEFAULT 1,  -- số lần gửi mã trong 1 giờ
+  LastSentAt   DATETIME2(0) NOT NULL CONSTRAINT DF_Pending_LastSent DEFAULT SYSUTCDATETIME(),
+  CreatedAt    DATETIME2(0) NOT NULL CONSTRAINT DF_Pending_Created DEFAULT SYSUTCDATETIME(),
+  CONSTRAINT UQ_Pending_Email UNIQUE (Email),
+  CONSTRAINT CK_Pending_Counts CHECK (Attempts >= 0 AND SendCount >= 1)
+);
 GO
