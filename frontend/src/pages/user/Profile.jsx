@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { api, errMsg, fmtDate } from '../../services/api';
 import { Field } from '../../components/ui';
+import PasswordInput from '../../components/PasswordInput';
 
 export default function Profile() {
   const { user, setUser } = useAuth();
@@ -38,13 +39,20 @@ export default function Profile() {
         <Field label="Địa chỉ"><input value={f.address} onChange={(e) => setF({ ...f, address: e.target.value })} /></Field>
         <button className="btn btn-primary" disabled={busy}>Lưu hồ sơ</button>
       </form>
-      <form className="panel" onSubmit={savePw}>
-        <h2>Đổi mật khẩu</h2>
-        <Field label="Mật khẩu hiện tại"><input type="password" value={pw.currentPassword} onChange={(e) => setPw({ ...pw, currentPassword: e.target.value })} autoComplete="current-password" /></Field>
-        <Field label="Mật khẩu mới"><input type="password" value={pw.newPassword} onChange={(e) => setPw({ ...pw, newPassword: e.target.value })} autoComplete="new-password" /></Field>
-        <Field label="Nhập lại mật khẩu mới"><input type="password" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} autoComplete="new-password" /></Field>
-        <button className="btn btn-primary" disabled={busy}>Đổi mật khẩu</button>
-      </form>
+      {user.HasPassword !== false ? (
+        <form className="panel" onSubmit={savePw}>
+          <h2>Đổi mật khẩu</h2>
+          <Field label="Mật khẩu hiện tại"><PasswordInput value={pw.currentPassword} onChange={(e) => setPw({ ...pw, currentPassword: e.target.value })} autoComplete="current-password" /></Field>
+          <Field label="Mật khẩu mới"><PasswordInput value={pw.newPassword} onChange={(e) => setPw({ ...pw, newPassword: e.target.value })} autoComplete="new-password" /></Field>
+          <Field label="Nhập lại mật khẩu mới"><PasswordInput value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} autoComplete="new-password" /></Field>
+          <button className="btn btn-primary" disabled={busy}>Đổi mật khẩu</button>
+        </form>
+      ) : (
+        <div className="panel">
+          <h2>Mật khẩu</h2>
+          <p className="muted">Tài khoản này đăng nhập bằng Google nên không có mật khẩu riêng. Hãy dùng nút “Đăng nhập bằng Google” ở trang đăng nhập.</p>
+        </div>
+      )}
     </div>
   );
 }

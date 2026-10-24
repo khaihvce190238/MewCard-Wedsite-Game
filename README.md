@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # MewCard — Decision Card Game + Card Shop
 
 Website **rút bài để đưa ra gợi ý** (không phải game chiến đấu/gacha) kết hợp **cửa hàng bán bộ bài vật lý**, đăng ký thành viên có xét duyệt và trang quản trị Admin.
@@ -186,6 +185,3 @@ Phản hồi: `{ success, data, message?, pagination? }`; lỗi: `{ success:fals
 - `npm install`, `npm run build`, `npm run dev` chưa chạy (môi trường không có mạng) — chưa có `package-lock.json` cho phần mới thêm.
 - Chưa gọi thử bất kỳ API nào end-to-end, chưa mở giao diện trên trình duyệt; các kịch bản đồng thời (rút bài/mua hàng) mới được thiết kế bằng ràng buộc DB + transaction, chưa chạy thử tải.
 - VNPay: **chưa có giao dịch sandbox nào được thực hiện** (cần credentials của bạn). Phần ký URL và xác minh chữ ký đã có test, nhưng chưa đối chiếu với máy chủ VNPay thật.
-=======
-# MewCard-Wedsite-Game
->>>>>>> 2d991b152fe7dffe24677ef4a18b6164b4535f94
