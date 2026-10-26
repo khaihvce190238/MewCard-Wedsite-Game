@@ -14,13 +14,23 @@ export async function listPublicTopics() {
   return r.recordset;
 }
 
-/** Không lộ tên/ảnh mặt trước của lá bài để không "spoil" trò chơi: chỉ trả số lượng và mặt sau. */
+/** Số lá tối đa được lộ cả mặt trước để trang chủ/trang chủ đề trình diễn (quạt bài, hero). */
+const PREVIEW_LIMIT = 3;
+
+/**
+ * Danh sách lá bài công khai của một chủ đề.
+ * - `cards`: chỉ có CardID + mặt sau (không lộ tên/mặt trước của cả bộ bài để không "spoil" trò chơi).
+ * - `preview`: tối đa PREVIEW_LIMIT lá đầu tiên kèm CẢ mặt trước và mặt sau, dùng để minh họa trên giao diện.
+ *   Không lộ tên/mô tả lá bài.
+ */
 export async function getPublicTopicCards(topicId) {
   const pool = await getPool();
   const t = (await exec(pool, 'SELECT TopicID, Name, Description, ImageURL FROM dbo.Topics WHERE TopicID=@id AND IsActive=1', { id: topicId })).recordset[0];
   if (!t) throw new AppError(404, 'Chủ đề không tồn tại hoặc đang bị ẩn');
-  const cards = (await exec(pool, 'SELECT CardID, BackImageURL FROM dbo.Cards WHERE TopicID=@id AND IsActive=1 ORDER BY CardID', { id: topicId })).recordset;
-  return { topic: t, cardCount: cards.length, cards };
+  const all = (await exec(pool, 'SELECT CardID, FrontImageURL, BackImageURL FROM dbo.Cards WHERE TopicID=@id AND IsActive=1 ORDER BY CardID', { id: topicId })).recordset;
+  const cards = all.map(({ CardID, BackImageURL }) => ({ CardID, BackImageURL }));
+  const preview = all.slice(0, PREVIEW_LIMIT).map(({ CardID, FrontImageURL, BackImageURL }) => ({ CardID, FrontImageURL, BackImageURL }));
+  return { topic: t, cardCount: cards.length, cards, preview };
 }
 
 /* ---------------- Admin: Topics ---------------- */

@@ -12,6 +12,7 @@ export default function AdminLayout() {
   const { user, logout } = useAuth();
   const nav = useNavigate();
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
   return (
     <div className="admin">
       <aside className={`sidebar ${open ? 'open' : ''}`}>

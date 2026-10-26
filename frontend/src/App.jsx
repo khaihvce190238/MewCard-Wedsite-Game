@@ -5,6 +5,7 @@ import { CartProvider } from './contexts/CartContext';
 import ProtectedRoute from './routes/ProtectedRoute';
 import MainLayout from './layouts/MainLayout';
 import AdminLayout from './layouts/AdminLayout';
+import SkyBackground from './components/SkyBackground';
 
 import Home from './pages/Home';
 import Login from './pages/auth/Login';
@@ -38,6 +39,7 @@ export default function App() {
       <ToastProvider>
         <AuthProvider>
           <CartProvider>
+            <SkyBackground />
             <Routes>
               <Route element={<MainLayout />}>
                 <Route index element={<Home />} />
