@@ -99,7 +99,7 @@ export default function Play() {
     Object.assign(clone.style, {
       position: 'fixed', left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px`,
       objectFit: 'contain', transformOrigin: 'top left', zIndex: '70', pointerEvents: 'none',
-      borderRadius: '14px', boxShadow: '0 12px 30px rgba(0,0,0,.35)',
+      borderRadius: '5%', boxShadow: '0 0 28px rgba(168,85,247,.55), 0 14px 30px rgba(0,0,0,.5)',
     });
     document.body.appendChild(clone);
     cloneRef.current = clone;
@@ -177,14 +177,16 @@ export default function Play() {
 
       <div className="stage">
         <div ref={stageRef} key={dealKey} className={`stage-card ${dealKey > 0 ? 'deal-in' : ''}`}>
-          <FlipCard
-            front={current?.FrontImageURLSnapshot}
-            back={current?.BackImageURLSnapshot || idleBack || topic.ImageURL}
-            flipped={revealed}
-            instant={instant}
-            alt={current?.CardNameSnapshot}
-            onClick={revealed && !busy ? () => setZoom(current) : undefined}
-          />
+          <div className={`halo ${revealed ? 'pulse' : ''}`}>
+            <FlipCard
+              front={current?.FrontImageURLSnapshot}
+              back={current?.BackImageURLSnapshot || idleBack || topic.ImageURL}
+              flipped={revealed}
+              instant={instant}
+              alt={current?.CardNameSnapshot}
+              onClick={revealed && !busy ? () => setZoom(current) : undefined}
+            />
+          </div>
         </div>
         <div className="result">
           {revealed ? (
@@ -192,7 +194,7 @@ export default function Play() {
               <small className="muted">Bấm vào lá bài để phóng to</small>
               <h2>{current.CardNameSnapshot}</h2>
               <p>{current.CardDescriptionSnapshot}</p>
-              <button className="btn" onClick={addFav} disabled={fav}>{fav ? '♥ Đã yêu thích' : '♡ Thêm vào yêu thích'}</button>
+              <button className="btn btn-fav" onClick={addFav} disabled={fav}>{fav ? '♥ Đã yêu thích' : '♡ Thêm vào yêu thích'}</button>
             </>
           ) : <p className="muted">{noCards ? 'Chủ đề này hiện chưa có lá bài nào.' : 'Nhấn “Rút bài” để nhận gợi ý của bạn.'}</p>}
           {notice && <div className="notice">{notice}</div>}
