@@ -6,6 +6,7 @@ import { useToast } from '../../contexts/ToastContext';
 import FlipCard from '../../components/FlipCard';
 import { Loading, ErrorBox } from '../../components/ui';
 
+
 const newSessionId = () =>
   (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`).replace(/[^A-Za-z0-9_-]/g, '');
 

@@ -37,7 +37,7 @@ export default function Home() {
           </div>
         </div>
         <h1>Chào mừng đến với MewCard</h1>
-        <p>Hôm nay bạn không biết ăn gì? Hãy để bộ bài thần kỳ lựa chọn giúp bạn!</p>
+        <p>Hôm nay bạn thế nào? Hãy để MewCard gợi ý giúp bạn!</p>
         <div className="row gap center wrap">
           <a className="btn btn-primary btn-lg" href="#topics" onClick={toTopics}>Chọn bộ bài</a>
           <Link className="btn btn-lg" to="/shop">Xem bộ bài thật</Link>
