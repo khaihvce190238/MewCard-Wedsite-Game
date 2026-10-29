@@ -5,7 +5,7 @@ import { api } from '../services/api';
 const cache = new Map();
 
 /**
- * API công khai trả `preview`: tối đa 3 lá đầu của chủ đề, mỗi lá có cả mặt trước lẫn mặt sau.
+ * API công khai trả `preview`: 3 lá ngẫu nhiên của chủ đề (đổi mỗi lần tải lại trang), mỗi lá có cả mặt trước lẫn mặt sau.
  * (Phần `cards` vẫn chỉ có mặt sau để không lộ cả bộ bài.)
  */
 const loadPreviews = (topicId) => {

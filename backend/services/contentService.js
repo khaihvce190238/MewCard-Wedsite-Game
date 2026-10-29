@@ -17,10 +17,19 @@ export async function listPublicTopics() {
 /** Số lá tối đa được lộ cả mặt trước để trang chủ/trang chủ đề trình diễn (quạt bài, hero). */
 const PREVIEW_LIMIT = 3;
 
+function shuffle(list) {
+  const a = [...list];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 /**
  * Danh sách lá bài công khai của một chủ đề.
  * - `cards`: chỉ có CardID + mặt sau (không lộ tên/mặt trước của cả bộ bài để không "spoil" trò chơi).
- * - `preview`: tối đa PREVIEW_LIMIT lá đầu tiên kèm CẢ mặt trước và mặt sau, dùng để minh họa trên giao diện.
+ * - `preview`: tối đa PREVIEW_LIMIT lá ngẫu nhiên trong cả bộ bài kèm CẢ mặt trước và mặt sau, dùng để minh họa trên giao diện.
  *   Không lộ tên/mô tả lá bài.
  */
 export async function getPublicTopicCards(topicId) {
@@ -29,7 +38,7 @@ export async function getPublicTopicCards(topicId) {
   if (!t) throw new AppError(404, 'Chủ đề không tồn tại hoặc đang bị ẩn');
   const all = (await exec(pool, 'SELECT CardID, FrontImageURL, BackImageURL FROM dbo.Cards WHERE TopicID=@id AND IsActive=1 ORDER BY CardID', { id: topicId })).recordset;
   const cards = all.map(({ CardID, BackImageURL }) => ({ CardID, BackImageURL }));
-  const preview = all.slice(0, PREVIEW_LIMIT).map(({ CardID, FrontImageURL, BackImageURL }) => ({ CardID, FrontImageURL, BackImageURL }));
+  const preview = shuffle(all).slice(0, PREVIEW_LIMIT).map(({ CardID, FrontImageURL, BackImageURL }) => ({ CardID, FrontImageURL, BackImageURL }));
   return { topic: t, cardCount: cards.length, cards, preview };
 }
 
@@ -102,7 +111,7 @@ export async function createCard(body, front, back) {
   const r = await exec(await getPool(), `
     INSERT INTO dbo.Cards (TopicID, Name, Description, FrontImageURL, BackImageURL)
     OUTPUT INSERTED.* VALUES (@topicId, @name, @description, @front, @back)`,
-  { topicId, name, description, front: front || DEFAULT_FRONT, back: back || DEFAULT_BACK });
+    { topicId, name, description, front: front || DEFAULT_FRONT, back: back || DEFAULT_BACK });
   return r.recordset[0];
 }
 
