@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useFetch } from '../hooks/useFetch';
 import { useTopicPreviews } from '../hooks/useTopicPreviews';
@@ -11,8 +12,10 @@ export default function Home() {
   const topics = data || [];
   const previews = useTopicPreviews(topics);
 
-  // Lá bài ở hero: một lá thật của chủ đề đầu tiên (mặt sau + mặt trước). Chưa có dữ liệu thì dùng logo.
-  const heroCard = previews[topics[0]?.TopicID]?.[0];
+  // Lá bài ở hero: một lá ngẫu nhiên của một chủ đề ngẫu nhiên (mặt sau + mặt trước). Chưa có dữ liệu thì dùng logo.
+  const [heroSeed] = useState(Math.random);
+  const heroTopic = topics.length ? topics[Math.floor(heroSeed * topics.length)] : null;
+  const heroCard = previews[heroTopic?.TopicID]?.[0];
   const heroBackSrc = heroCard ? assetUrl(heroCard.back) : logo;
   const heroFrontSrc = heroCard ? assetUrl(heroCard.front) : logo;
 
@@ -56,8 +59,7 @@ export default function Home() {
 
       <section className="home-section home-about" aria-labelledby="home-about-title">
         <h2 id="home-about-title">MewCard là gì?</h2>
-        <p>
-          MewCard là bộ bài giúp bạn quyết định nhanh những chuyện nhỏ hằng ngày — ăn gì, đi đâu, làm gì — kèm một chút
+        <p>MewCard là bộ bài giúp bạn quyết định nhanh những chuyện nhỏ hằng ngày — ăn gì, đi đâu, làm gì — kèm một chút
           lời nhắn nhẹ nhàng để bạn chậm lại một nhịp. Chọn một chủ đề, rút từng lá bài và nhận gợi ý cho quyết định tiếp
           theo. Mỗi lá chỉ xuất hiện một lần trong mỗi vòng.
         </p>
